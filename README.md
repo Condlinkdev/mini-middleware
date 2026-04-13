@@ -1,68 +1,53 @@
 # mini-middleware
 
-Veja também:
-https://github.com/Condlinkdev/dev-backend/tree/main/setup-tunel
+Veja também: [Configuração de Túnel](https://github.com/Condlinkdev/dev-backend/tree/main/setup-tunel)
 
-Para usar esse sistema tem que instalar o executável na máquina que tem acesso local às câmeras.
+Para usar esse sistema, é necessário instalar o executável na máquina que tem acesso local às câmeras.
 
-Inicialização automática:
-			     - Abra o Agendador de Tarefas do Windows.
-			
-			     - Com o agendador aberto, clique em Criar tarefa no painel lateral direito.
+## Inicialização automática:
+1. Abra o **Agendador de Tarefas** do Windows.
+2. Clique em **Criar tarefa** no painel lateral direito.
+3. Na aba **Geral**:
+   - Nome: `Iniciar Middleware`
+   - Marque: `Executar com privilégios mais altos`
+4. Na aba **Disparadores**:
+   - Clique em Novo e selecione `Ao fazer logon`.
+   - Selecione `Qualquer usuário` e clique em Ok.
+   - Adicione outro: selecione `Ao iniciar`.
+5. Na aba **Ações**:
+   - Tipo: `Iniciar um programa`.
+   - Clique em procurar e selecione o arquivo `.exe` instalado.
+6. Na aba **Configurações**:
+   - Habilite: `Executar a tarefa o quanto antes após um início agendado ser perdido`.
+7. Clique em OK e verifique na página inicial se a tarefa foi criada.
 
-			     - Ao clicar em Criar tarefa, na aba Geral coloque o nome de Iniciar Middleware, habilite o Executar com privilégios mais altos e selecione a aba Disparadores.
-			
-			     - Na aba de disparadores, selecione Ao fazer logon, coloque Qualquer usuário, deixe Habilitado e clique em Ok.
-				
-			     - Ainda na aba de disparadores vamos adicionar mais uma item, repita o mesmo passo a passo só troque a ação para Ao iniciar, depois de adicionar clique na aba Ações.
+---
 
-			     - Na aba de ações, vamos adicionar uma nova ação. Selecione o tipo da ação como Iniciar um programa, clique em procurar e ache o .exe que você instalou, ao selecionar verifique se o caminho está correto e clique em Ok.
+## Configurar o Hardware
+Para comunicar com o Mini-Middleware:
 
-			     - Clique na aba Configurações e habilite a opção Executar a tarefa o quanto antes após um início agendado ser perdido. E depois clique em Ok para finalizar o processo.
-			
-			     - Verifique se está tudo ok na página inicial.
-
-
-
-Configurar o Hardware para se comunicar com o Mini-Middleware:
-								- Acesse o admin-condlink.vercel.app
-					
-								- Acesse Instalação > Terminais > Gerenciar Terminais > Cadastrar Terminais > Selecione o Fabricante Referente e o Modelo Especifico > Insira os dados obrigatorios (nome do dispositivo, coloque um devId, digite o usuario do terminal, senha referido, status e Rota de Acesso) > Salve
-								
-								- Faça isso para todos os terminais em seguida vá no bloco de notas e crie um arquivo chamado terminal.json e utilize a seguinte estrutura para cada terminal cadastrado:
-								
-								{
-									"ip do dispositivo": "dev id cadastrado no condlink",
-									"ip do dispositivo": "dev id cadastrado no condlink"								
-								}
-
-								- Salve o arquivo e coloque ele na pasta do admin-condlink caso ela não exista crie a pasta com o nome "admin-condlink" localizada na raiz do computador.
-
-								- Faça tambem um arquivo chamado login.json com a seguinte estrutura:
-
-								{
-									"username": "admin.XXXX",
-									"password": "XXXXXXXX"
-								}					
-
-								- Salve o arquivo e coloque ele na pasta do admin-condlink caso ela não exista crie a pasta com o nome "admin-condlink" localizada na raiz do computador.
+1. Acesse: [admin-condlink.vercel.app](https://admin-condlink.vercel.app)
+2. Vá em **Instalação > Terminais > Gerenciar Terminais > Cadastrar Terminais**.
+3. Selecione o Fabricante e Modelo específico.
+4. Insira os dados obrigatórios (Nome, devId, usuário, senha, status e Rota de Acesso) e salve.
+5. Crie um arquivo chamado `terminal.json` no bloco de notas com a estrutura:
+   ```json
+   {
+     "ip_do_dispositivo_1": "dev_id_cadastrado_1",
+     "ip_do_dispositivo_2": "dev_id_cadastrado_2"
+   }
 
 
-								
-Inicialização manual:
-				- Pressione as teclas Windows + X e selecione "Terminal" para abrir o Terminal.
-				
-				- digite o comando ".\miniMiddleware" para executar o programa.
-				- Na pasta C:\Users\Portaria\miniMiddleware.exe
-				- Copiar para outra pasta, por exemplo:
-				- C:\Users\Public\Downloads\miniMiddleware.exe
-				- e executar com o comando:
-				```miniMiddleware.exe```
-				```.\miniMiddleware.exe ```
-				O progrma vai exibir um mensagem como essa:
-				<img width="1600" height="900" alt="image" src="https://github.com/user-attachments/assets/416f0dbf-e56d-4afe-9671-411ebd4790f8" />
+   - digite o comando ".\miniMiddleware" para executar o programa.
+			- Na pasta C:\Users\Portaria\miniMiddleware.exe
+			- Copiar para outra pasta, por exemplo:
+			- C:\Users\Public\Downloads\miniMiddleware.exe
+			- e executar com o comando:
+			```miniMiddleware.exe```
+			```.\miniMiddleware.exe ```
+			O progrma vai exibir um mensagem como essa:
+			<img width="1600" height="900" alt="image" src="https://github.com/user-attachments/assets/416f0dbf-e56d-4afe-9671-411ebd4790f8" />
 
-				- Ele vai ficar minimizado. 
-				- Não pode fechar, caso feche o serviço vai fiacar parado.
-				- Na barra tem que ficar essa informação
-				
+			- Ele vai ficar minimizado. 
+			- Não pode fechar, caso feche o serviço vai fiacar parado.
+			- Na barra tem que ficar essa informação
