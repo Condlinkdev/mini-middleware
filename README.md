@@ -39,8 +39,9 @@ Para comunicar com o Mini-Middleware:
 
 Inicialização manual:
 - Pressione as teclas Windows + X e selecione "Terminal" para abrir o Terminal.
-   - digite o comando ".\miniMiddleware" para executar o programa.
+   - digite o comando ".\miniMiddleware" ou "miniMidleware.exe" para executar o programa.
 			- Na pasta C:\Users\Portaria\miniMiddleware.exe
+     		- Se der erro, tente em outra pasta
 			- Copiar para outra pasta, por exemplo:
 			- C:\Users\Public\Downloads\miniMiddleware.exe
 			- e executar com o comando:
