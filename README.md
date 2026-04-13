@@ -37,7 +37,8 @@ Para comunicar com o Mini-Middleware:
      "ip_do_dispositivo_2": "dev_id_cadastrado_2"
    }
 
-
+Inicialização manual:
+- Pressione as teclas Windows + X e selecione "Terminal" para abrir o Terminal.
    - digite o comando ".\miniMiddleware" para executar o programa.
 			- Na pasta C:\Users\Portaria\miniMiddleware.exe
 			- Copiar para outra pasta, por exemplo:
