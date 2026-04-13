@@ -52,4 +52,4 @@ Inicialização manual:
 
 			- Ele vai ficar minimizado. 
 			- Não pode fechar, caso feche o serviço vai fiacar parado.
-			- Na barra tem que ficar essa informação
+			- Na barra tem que ficar essa informação que ficou minimizado.
