@@ -57,6 +57,7 @@ Inicialização manual:
 				- Copiar para outra pasta, por exemplo:
 				- C:\Users\Public\Downloads\miniMiddleware.exe
 				- e executar com o comando:
+				```miniMiddleware.exe```
 				```.\miniMiddleware.exe ```
 				O progrma vai exibir um mensagem como essa:
 				<img width="1600" height="900" alt="image" src="https://github.com/user-attachments/assets/416f0dbf-e56d-4afe-9671-411ebd4790f8" />
