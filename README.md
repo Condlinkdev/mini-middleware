@@ -24,7 +24,9 @@ Para usar esse sistema, é necessário instalar o executável na máquina que te
 ---
 
 ## Configurar o Hardware
+---
 Para comunicar com o Mini-Middleware:
+---
 
 1. Acesse: [admin-condlink.vercel.app](https://admin-condlink.vercel.app)
 2. Vá em **Instalação > Terminais > Gerenciar Terminais > Cadastrar Terminais**.
@@ -36,13 +38,17 @@ Para comunicar com o Mini-Middleware:
      "ip_do_dispositivo_1": "dev_id_cadastrado_1",
      "ip_do_dispositivo_2": "dev_id_cadastrado_2"
    }
-Salve o arquivo e coloque ele na pasta do admin-condlink caso ela não exista crie a pasta com o nome "admin-condlink" localizada na raiz do computador
+  
+Salve o arquivo e coloque ele na pasta do admin-condlink caso ela não exista crie a pasta com o nome "admin-condlink" localizada na raiz do computador.
+
 6. Crie outro arquivo chamado 'login.json' no bloco de notas com a estrutura:
+   ```json
 	{
 		"username": "admin.XXXX",
 		"password": "XXXXXXXX"
 	}
-Salve o arquivo e coloque ele na pasta do admin-condlink, localizada na raiz do computador, criada anteriormente para o arquivo "terminal.json".
+	
+ Salve o arquivo e coloque ele na pasta do admin-condlink, localizada na raiz do computador, criada anteriormente para o arquivo "terminal.json".
 
 Inicialização manual:
 - Pressione as teclas Windows + X e selecione "Terminal" para abrir o Terminal.
