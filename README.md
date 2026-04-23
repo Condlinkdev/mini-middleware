@@ -36,7 +36,7 @@ Para comunicar com o Mini-Middleware:
      "ip_do_dispositivo_1": "dev_id_cadastrado_1",
      "ip_do_dispositivo_2": "dev_id_cadastrado_2"
    }
-Salve o arquivo e coloque ele na pasta do admin-condlink caso ela não exista crie a pasta com o nome "admin-condlink" localizada na raiz do computador.
+Salve o arquivo e coloque ele na pasta do admin-condlink caso ela não exista crie a pasta com o nome "admin-condlink" localizada na raiz do computador
 6. Crie outro arquivo chamado 'login.json' no bloco de notas com a estrutura:
 	{
 		"username": "admin.XXXX",
