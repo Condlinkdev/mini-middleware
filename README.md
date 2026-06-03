@@ -72,6 +72,38 @@ nem criar arquivos manualmente.
 
 ## Como funciona (visão técnica)
 
+```mermaid
+flowchart LR
+    subgraph LOCAL["Rede local da portaria"]
+        DEV["Dispositivo<br/>câmera / controle de acesso<br/>porta 80"]
+        subgraph PC["PC da portaria · Windows"]
+            REG[("Registro<br/>terminais + login")]
+            MW["miniMiddleware<br/>serviço CondlinkMiddleware"]
+            CF["cloudflared"]
+        end
+    end
+
+    subgraph NET["Internet"]
+        EDGE["Cloudflare<br/>URL pública trycloudflare.com"]
+        COND["Plataforma Condlink"]
+    end
+
+    REG -. "1 · lê config" .-> MW
+    MW -- "2 · inicia túnel" --> CF
+    CF -- "3 · túnel HTTPS" --> EDGE
+    MW -- "4 · login + registra URL (devId)" --> COND
+    COND -- "5 · acessa pela URL pública" --> EDGE
+    EDGE -- "6 · encaminha" --> CF
+    CF -- "7 · HTTP local" --> DEV
+```
+
+- **Registro (passos 1–4):** o serviço lê a configuração, sobe um túnel para o
+  dispositivo e registra a URL pública no Condlink, associada ao `devId`.
+- **Acesso (passos 5–7):** o Condlink alcança o dispositivo através da URL pública →
+  Cloudflare → `cloudflared` → `http://<IP>:80`, sem abrir portas no roteador.
+
+Em detalhe:
+
 1. O serviço lê a configuração (terminais e login) do **Registro do Windows**.
 2. Para cada terminal, executa `cloudflared tunnel --url http://<IP>:80`.
 3. Captura a URL pública gerada (`https://*.trycloudflare.com`) na saída do `cloudflared`.
