@@ -222,6 +222,9 @@ Log (últimas linhas):
 Get-Content 'C:\ProgramData\Condlink\MiniMiddleware\miniMiddleware.log' -Tail 30
 ```
 
+> 💡 Atalho: o Menu Iniciar tem **"Ver Logs do Condlink Mini-Middleware"** (ou o arquivo
+> `Ver-Logs.bat` na pasta de instalação), que abre o log **em tempo real** numa janela.
+
 Configuração gravada no Registro:
 
 ```powershell
