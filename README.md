@@ -17,6 +17,7 @@ automaticamente no Condlink — sem abrir portas no roteador nem configurar IP f
 - [Instalação rápida](#instalação-rápida)
 - [Como funciona (visão técnica)](#como-funciona-visão-técnica)
 - [Configuração](#configuração)
+- [URL do túnel (registro automático)](#url-do-túnel-registro-automático)
 - [Operação e diagnóstico](#operação-e-diagnóstico)
 - [Solução de problemas](#solução-de-problemas)
 - [Desinstalação](#desinstalação)
@@ -175,6 +176,35 @@ na hora — responda **Sim**. (Alternativamente, reinicie manualmente com
 `miniMiddleware.exe stop` e `miniMiddleware.exe start`, ou pelo `services.msc`.)
 
 Desinstale **apenas** se for remover o produto da máquina — nunca para mudar configuração.
+
+---
+
+## URL do túnel (registro automático)
+
+**Você não precisa copiar a URL no admin — o serviço faz isso sozinho.**
+
+Quando um túnel sobe, o `miniMiddleware` faz login no Condlink e **registra a URL
+pública para o `devId`** automaticamente (chamada `PUT` em `admin-sinc-terminal-placa`).
+O campo de rota/proxy do terminal no admin é preenchido pelo próprio serviço.
+
+> ⚠️ A URL `*.trycloudflare.com` é **efêmera**: a cada reinício do serviço (ou do
+> `cloudflared`) é gerada uma **URL nova**. Por isso o registro é automático — se você
+> colasse a URL manualmente no admin, ela quebraria no próximo reinício.
+
+Se quiser apenas **conferir** a URL atual, ela fica no log:
+
+```powershell
+Select-String -Path 'C:\ProgramData\Condlink\MiniMiddleware\miniMiddleware.log' -Pattern 'trycloudflare.com'
+```
+
+No log você verá, para cada terminal:
+
+- `[Túnel N] URL encontrada: https://....trycloudflare.com`
+- `[Túnel N] URL registrada com sucesso no sistema Condlink` ← confirma que subiu no admin
+
+Se aparecer a primeira linha mas **não** a confirmação de registro (ou um erro logo
+abaixo), o registro falhou — geralmente **usuário/senha** ou **devId** incorretos na
+tela de configuração.
 
 ---
 
