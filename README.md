@@ -56,7 +56,9 @@ automaticamente no Condlink — sem abrir portas no roteador nem configurar IP f
 
 ### 3. Preencher a tela de configuração
 
-![Tela de configuração do Mini-Middleware](docs/tela-configuracao.png)
+![Tela de configuração do Mini-Middleware com dados de exemplo](docs/tela-configuracao.png)
+
+> *Exemplo:* dois terminais cadastrados (IP + devId) e o login do Condlink preenchido.
 
 - **Terminais:** digite o **IP** do dispositivo e o **devId**, clique em **Adicionar**
   (repita para cada dispositivo). Para tirar um da lista, selecione-o e clique em
