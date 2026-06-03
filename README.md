@@ -5,9 +5,68 @@ para a plataforma Condlink através de túneis [Cloudflare](https://www.cloudfla
 
 Roda na máquina que tem acesso à rede local dos dispositivos (tipicamente o PC da
 portaria) e mantém, para cada dispositivo, um túnel HTTPS público que é registrado
-automaticamente no Condlink.
+automaticamente no Condlink — sem abrir portas no roteador nem configurar IP fixo.
 
-> Código-fonte: [Condlinkdev/dev-backend → setup-tunel](https://github.com/Condlinkdev/dev-backend/tree/main/setup-tunel)
+> **Código-fonte:** [Condlinkdev/dev-backend → setup-tunel](https://github.com/Condlinkdev/dev-backend/tree/main/setup-tunel)
+
+---
+
+## Índice
+
+- [Pré-requisitos](#pré-requisitos)
+- [Instalação rápida](#instalação-rápida)
+- [Como funciona (visão técnica)](#como-funciona-visão-técnica)
+- [Configuração](#configuração)
+- [Operação e diagnóstico](#operação-e-diagnóstico)
+- [Solução de problemas](#solução-de-problemas)
+- [Desinstalação](#desinstalação)
+- [Compilação (desenvolvedores)](#compilação-desenvolvedores)
+
+---
+
+## Pré-requisitos
+
+- **Windows** 7 SP1 ou superior (64 bits).
+- Conta de **administrador** na máquina (o instalador registra um serviço).
+- A máquina precisa estar na **mesma rede local** dos dispositivos e ter acesso à
+  **internet** (para os túneis Cloudflare e a API do Condlink).
+- Cada terminal já **cadastrado no Condlink**, com o respectivo `devId` (veja abaixo).
+
+> O `cloudflared` já vem **embutido no instalador** — não é necessário baixar nada.
+
+---
+
+## Instalação rápida
+
+### 1. Cadastrar os terminais no Condlink
+
+1. Acesse [admin-condlink.vercel.app](https://admin-condlink.vercel.app).
+2. Vá em **Instalação → Terminais → Gerenciar Terminais → Cadastrar Terminais**.
+3. Selecione o Fabricante e Modelo, preencha os dados obrigatórios (Nome, **devId**,
+   usuário, senha, status e Rota de Acesso) e salve.
+4. Anote o **IP** de cada dispositivo e o **devId** cadastrado — você vai usá-los na
+   tela de configuração.
+
+### 2. Rodar o instalador
+
+1. Copie `CondlinkMiniMiddlewareSetup_v1.0.0.exe` para a máquina da portaria.
+2. Execute-o (**clique direito → Executar como administrador**) e aceite o UAC.
+3. O instalador, sozinho, instala o serviço, abre a **tela de configuração** e, ao
+   final, inicia o serviço.
+
+### 3. Preencher a tela de configuração
+
+![Tela de configuração do Mini-Middleware](docs/tela-configuracao.png)
+
+- **Terminais:** digite o **IP** do dispositivo e o **devId**, clique em **Adicionar**
+  (repita para cada dispositivo). Para tirar um da lista, selecione-o e clique em
+  **Remover**.
+- **Login Condlink:** informe o **Usuário** e a **Senha**.
+- Clique em **Salvar**.
+
+Pronto. O serviço inicia e os túneis sobem automaticamente — e voltam a subir sozinhos
+sempre que o Windows for reiniciado. **Não** é preciso configurar o Agendador de Tarefas
+nem criar arquivos manualmente.
 
 ---
 
@@ -18,13 +77,14 @@ automaticamente no Condlink.
 3. Captura a URL pública gerada (`https://*.trycloudflare.com`) na saída do `cloudflared`.
 4. Faz login na API do Condlink e registra a URL do túnel para aquele `devId`
    (chamada `PUT` em `admin-sinc-terminal-placa`).
-5. Mantém os túneis vivos enquanto o serviço estiver em execução.
+5. Mantém os túneis vivos enquanto o serviço estiver em execução; ao parar o serviço,
+   encerra todos os processos `cloudflared`.
 
 - **Linguagem:** Go (somente Windows).
-- **Dependência empacotada:** `cloudflared.exe` — vem **dentro do instalador**, então
-  não há download externo na primeira execução (funciona offline / atrás de firewall).
-- **Execução:** Serviço do Windows (`CondlinkMiddleware`, início automático). Não há
-  janela aberta; o serviço sobe junto com o Windows, sem precisar de login de usuário.
+- **Execução:** Serviço do Windows `CondlinkMiddleware`, início **automático**. Não há
+  janela aberta e não depende de um usuário logado.
+- **Dependência empacotada:** `cloudflared.exe` vem dentro do instalador, então não há
+  download externo na primeira execução (funciona offline / atrás de firewall).
 
 ### Layout de arquivos (padrão Windows)
 
@@ -34,10 +94,12 @@ automaticamente no Condlink.
 | `C:\ProgramData\Condlink\MiniMiddleware\miniMiddleware.log` | Log do serviço (gravável) |
 | `HKLM\SYSTEM\CurrentControlSet\Services\CondlinkMiddleware\Parameters` | Configuração (ver abaixo) |
 
-### Configuração (propriedade do serviço, no Registro)
+---
 
-A configuração **não** fica mais em arquivos `.json` — ela é uma propriedade do
-próprio serviço, salva no Registro e editável pela tela de configuração:
+## Configuração
+
+A configuração **não** fica em arquivos `.json` — ela é uma **propriedade do próprio
+serviço**, salva no Registro e editada pela tela de configuração:
 
 ```
 HKLM\SYSTEM\CurrentControlSet\Services\CondlinkMiddleware\Parameters
@@ -46,39 +108,11 @@ HKLM\SYSTEM\CurrentControlSet\Services\CondlinkMiddleware\Parameters
     Password   (REG_SZ)         senha do Condlink
 ```
 
-> Ao desinstalar o serviço, essa configuração é removida automaticamente.
-> Instalações antigas que tinham `C:\admin-condlink\terminal.json` e `login.json`
-> são **migradas automaticamente** na primeira execução.
+- Ao **desinstalar** o serviço, essa configuração é removida automaticamente.
+- Instalações antigas que tinham `C:\admin-condlink\terminal.json` e `login.json` são
+  **migradas automaticamente** na primeira execução.
 
----
-
-## Instalação
-
-### 1. Cadastrar os terminais no Condlink
-
-1. Acesse [admin-condlink.vercel.app](https://admin-condlink.vercel.app).
-2. Vá em **Instalação → Terminais → Gerenciar Terminais → Cadastrar Terminais**.
-3. Selecione o Fabricante e Modelo, preencha os dados obrigatórios (Nome, **devId**,
-   usuário, senha, status e Rota de Acesso) e salve. Anote o **IP** de cada
-   dispositivo e o **devId** que você cadastrou.
-
-### 2. Rodar o instalador
-
-1. Copie `CondlinkMiniMiddlewareSetup_v1.0.0.exe` para a máquina da portaria.
-2. Execute-o (**clique direito → Executar como administrador**) e aceite o UAC.
-3. O instalador automaticamente:
-   - instala o serviço `CondlinkMiddleware`;
-   - abre a **tela de configuração**;
-   - inicia o serviço ao final.
-4. Na tela de configuração, informe:
-   - **Terminais:** digite o IP e o devId e clique em *Adicionar* (repita para cada um);
-   - **Usuário** e **Senha** do Condlink;
-   - clique em **Salvar**.
-
-Pronto — o serviço inicia e os túneis sobem. Não é preciso configurar Agendador de
-Tarefas nem criar arquivos manualmente.
-
-### 3. Reconfigurar depois (sem reinstalar)
+### Reconfigurar depois (sem reinstalar)
 
 - Menu Iniciar → **"Configurar Condlink Mini-Middleware"**, ou
 - execute:
@@ -87,25 +121,25 @@ Tarefas nem criar arquivos manualmente.
   & 'C:\Program Files\Condlink\MiniMiddleware\miniMiddleware.exe' config
   ```
 
-Ao salvar, a tela oferece reiniciar o serviço para aplicar as alterações.
+Ao salvar, a tela oferece **reiniciar o serviço** para aplicar as alterações.
 
 ---
 
 ## Operação e diagnóstico
 
-Verificar o estado do serviço:
+Estado do serviço:
 
 ```powershell
 Get-Service CondlinkMiddleware
 ```
 
-Ver o log (últimas linhas):
+Log (últimas linhas):
 
 ```powershell
 Get-Content 'C:\ProgramData\Condlink\MiniMiddleware\miniMiddleware.log' -Tail 30
 ```
 
-Conferir a configuração gravada no Registro:
+Configuração gravada no Registro:
 
 ```powershell
 Get-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Services\CondlinkMiddleware\Parameters'
@@ -118,21 +152,37 @@ Executando `miniMiddleware.exe` diretamente (requer administrador):
 | Comando | Ação |
 |---|---|
 | `miniMiddleware.exe install` | Instala o serviço |
-| `miniMiddleware.exe remove` | Remove o serviço (e sua configuração no Registro) |
-| `miniMiddleware.exe start` | Inicia o serviço |
-| `miniMiddleware.exe stop` | Para o serviço |
-| `miniMiddleware.exe config` | Abre a tela de configuração |
+| `miniMiddleware.exe remove`  | Remove o serviço (e sua configuração no Registro) |
+| `miniMiddleware.exe start`   | Inicia o serviço |
+| `miniMiddleware.exe stop`    | Para o serviço |
+| `miniMiddleware.exe config`  | Abre a tela de configuração |
+
+---
+
+## Solução de problemas
+
+| Sintoma | Causa provável / o que fazer |
+|---|---|
+| O serviço não aparece / não inicia | Reinstale como administrador. Confira `Get-Service CondlinkMiddleware` e o log. |
+| Túnel não é registrado no Condlink | Verifique **Usuário/Senha** na tela de configuração e se o **devId** confere com o cadastrado. Veja o erro no log. |
+| `URL não encontrada` no log | A máquina não conseguiu acessar a Cloudflare. Verifique a internet / firewall de saída. |
+| Dispositivo não responde no túnel | Confirme que o **IP** está correto e que o dispositivo responde em `http://<IP>:80` a partir da máquina. |
+| Mudei a configuração e nada mudou | Após salvar, **reinicie o serviço** (a tela oferece isso, ou use `stop` + `start`). |
+
+O **log** em `C:\ProgramData\Condlink\MiniMiddleware\miniMiddleware.log` registra cada
+passo (URL do túnel, login, registro) e é o primeiro lugar para investigar.
 
 ---
 
 ## Desinstalação
 
 Configurações do Windows → **Aplicativos** → *Condlink Mini-Middleware* → **Desinstalar**.
-Isso para e remove o serviço e apaga a configuração do Registro.
+Isso para e remove o serviço e apaga a configuração do Registro. (O `cloudflared.exe` em
+Program Files é mantido propositalmente.)
 
 ---
 
-## Compilação (para desenvolvedores)
+## Compilação (desenvolvedores)
 
 No diretório do código-fonte (`setup-tunel`), com **Go 1.22+** instalado:
 
@@ -140,7 +190,7 @@ No diretório do código-fonte (`setup-tunel`), com **Go 1.22+** instalado:
 .\build.ps1
 ```
 
-O script baixa dependências, embute as propriedades/manifesto (`go-winres`),
-compila o `miniMiddleware.exe`, garante o `cloudflared.exe` e, se o
-[Inno Setup 6](https://jrsoftware.org/isinfo.php) estiver instalado, gera o
-instalador em `output\CondlinkMiniMiddlewareSetup_v1.0.0.exe`.
+O script baixa as dependências, embute as propriedades/manifesto (`go-winres`), compila
+o `miniMiddleware.exe`, garante o `cloudflared.exe` e — se o
+[Inno Setup 6](https://jrsoftware.org/isinfo.php) estiver instalado — gera o instalador
+em `output\CondlinkMiniMiddlewareSetup_v1.0.0.exe`.
