@@ -1,0 +1,5 @@
+# Configuração local do Claude Code (não versionar)
+.claude/
+
+# Saída de build do instalador
+output/
