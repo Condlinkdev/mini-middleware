@@ -148,6 +148,12 @@ HKLM\SYSTEM\CurrentControlSet\Services\CondlinkMiddleware\Parameters
 
 ### Reconfigurar depois (sem reinstalar)
 
+> **Para alterar IP, devId ou login, NÃO desinstale.** A configuração fica no Registro
+> (é propriedade do serviço), separada da instalação — basta reabrir a tela de
+> configuração e editar.
+
+Abra a tela de configuração:
+
 - Menu Iniciar → **"Configurar Condlink Mini-Middleware"**, ou
 - execute:
 
@@ -155,7 +161,20 @@ HKLM\SYSTEM\CurrentControlSet\Services\CondlinkMiddleware\Parameters
   & 'C:\Program Files\Condlink\MiniMiddleware\miniMiddleware.exe' config
   ```
 
-Ao salvar, a tela oferece **reiniciar o serviço** para aplicar as alterações.
+Na tela (que já abre com o que está salvo):
+
+- **Alterar** o IP ou o devId de um terminal: selecione a linha → **Remover** → digite os
+  valores corretos → **Adicionar**. *(A lista não edita a linha no lugar; é remover e
+  adicionar de novo.)*
+- **Incluir** um terminal novo: digite IP + devId → **Adicionar**.
+- **Excluir** um terminal: selecione a linha → **Remover**.
+- **Trocar** o login: altere **Usuário** / **Senha**.
+
+Clique em **Salvar**. A tela oferece **reiniciar o serviço** para aplicar as alterações
+na hora — responda **Sim**. (Alternativamente, reinicie manualmente com
+`miniMiddleware.exe stop` e `miniMiddleware.exe start`, ou pelo `services.msc`.)
+
+Desinstale **apenas** se for remover o produto da máquina — nunca para mudar configuração.
 
 ---
 
